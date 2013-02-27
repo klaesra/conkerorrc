@@ -1,0 +1,68 @@
+// Show number and loading of buffers
+add_hook("mode_line_hook", mode_line_adder(buffer_count_widget), true);
+
+add_hook("mode_line_hook", mode_line_adder(loading_count_widget), true);
+
+// Things load in new buffers rather than windows
+function load_url_in_new_buffer_really(url, ctx) {
+    create_buffer_in_current_window(buffer_creator(content_buffer, $load = url, $configuration = ctx.config), OPEN_NEW_BUFFER);} 
+url_remoting_fn = load_url_in_new_buffer;
+
+// Open link in new buffer with "d"
+interactive("follow-new-buffer", null, function (I) {
+    var target = OPEN_NEW_BUFFER;
+    var element = yield I.read_browser_object("follow", "Follow", "links", target);
+    browser_element_follow(I.buffer, target, element);
+});
+
+define_key(content_buffer_normal_keymap, "d", "follow-new-buffer");
+
+
+// My webjumps:
+define_webjump("torrentz", "http://www.torrentz.com/search?q=%s");
+
+define_webjump("youtube", "http://www.youtube.com/results?search_query=%s&search_type=");
+
+define_webjump("hoogle", "http://www.haskell.org/hoogle/?hoogle=%s");
+
+define_webjump("matlab", "http://www.mathworks.se/help/search/doccenter/en/R2012b?qdoc=%s&submitsearch=Search");
+
+define_webjump("plazes", "http://plazes.com/search;users?q=%s");
+
+define_webjump("codesearch", "http://google.com/codesearch?q=%s&hl=en&btnG=Search+Code");
+
+define_webjump("scenetorrents", "https://www.scenetorrents.org/browse.php?c%5B%5D=14&c%5B%5D=1&c%5B%5D=7&c%5B%5D=5&c%5B%5D=16&c%5B%5D=4&c%5B%5D=3&c%5B%5D=25&c%5B%5D=19&c%5B%5D=9&c%5B%5D=2&c%5B%5D=8&c%5B%5D=28&c%5B%5D=18&c%5B%5D=23&c%5B%5D=22&c%5B%5D=24&c%5B%5D=17&c%5B%5D=15&c%5B%5D=11&search=%s&titleonly=1&all=0&incldead=0");
+
+define_webjump("books", "http://books.google.com/books?ei=ymiPSe2hCImt-gbIv-mdCw&ct=result&q=%s&btnG=Search+Books");
+
+define_webjump("wordpress", "http://wordpress.org/search/%s"); 
+
+// Set default download folder
+cwd = make_file("/home/klaes/downloads");
+
+// Auto save and load session
+require("session.js");
+session_auto_save_auto_load = true;
+session_auto_save_auto_load_fn = session_auto_save_load_window_current;
+
+// Auto-modes:
+// require("gmail");
+xkcd_add_title = true;
+
+// Define number keys to switch buffers
+function define_switch_buffer_key (key, buf_num) {
+    define_key(default_global_keymap, key,
+               function (I) {
+                   switch_to_buffer(I.window,
+                                    I.window.buffers.get_buffer(buf_num));
+               });
+}
+for (let i = 0; i < 10; ++i) {
+    define_switch_buffer_key(String((i+1)%10), i);
+}
+
+// Set what program opens pdf in conkeror
+external_content_handlers.set("application/pdf", "evince");
+
+// Open external url links in new buffer
+url_remoting_fn = load_url_in_new_buffer;

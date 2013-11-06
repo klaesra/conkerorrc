@@ -18,10 +18,15 @@ interactive("follow-new-buffer", null, function (I) {
 define_key(content_buffer_normal_keymap, "d", "follow-new-buffer");
 
 
+// dont use google calendar mode, it breaks shit
+page_mode_deactivate(google_calendar_mode);
+
 // My webjumps:
 define_webjump("torrentz", "http://www.torrentz.com/search?q=%s");
 
 define_webjump("youtube", "http://www.youtube.com/results?search_query=%s&search_type=");
+
+define_webjump("thesaurus", "http://thesaurus.com/browse/%s");
 
 define_webjump("hoogle", "http://www.haskell.org/hoogle/?hoogle=%s");
 
@@ -31,7 +36,7 @@ define_webjump("plazes", "http://plazes.com/search;users?q=%s");
 
 define_webjump("codesearch", "http://google.com/codesearch?q=%s&hl=en&btnG=Search+Code");
 
-define_webjump("scenetorrents", "https://www.scenetorrents.org/browse.php?c%5B%5D=14&c%5B%5D=1&c%5B%5D=7&c%5B%5D=5&c%5B%5D=16&c%5B%5D=4&c%5B%5D=3&c%5B%5D=25&c%5B%5D=19&c%5B%5D=9&c%5B%5D=2&c%5B%5D=8&c%5B%5D=28&c%5B%5D=18&c%5B%5D=23&c%5B%5D=22&c%5B%5D=24&c%5B%5D=17&c%5B%5D=15&c%5B%5D=11&search=%s&titleonly=1&all=0&incldead=0");
+define_webjump("stellarwinds", "http://stellarwinds.me/browse.php?search=%s");
 
 define_webjump("books", "http://books.google.com/books?ei=ymiPSe2hCImt-gbIv-mdCw&ct=result&q=%s&btnG=Search+Books");
 
@@ -46,7 +51,7 @@ session_auto_save_auto_load = true;
 session_auto_save_auto_load_fn = session_auto_save_load_window_current;
 
 // Auto-modes:
-// require("gmail");
+require("gmail");
 xkcd_add_title = true;
 
 // Define number keys to switch buffers
@@ -66,3 +71,6 @@ external_content_handlers.set("application/pdf", "evince");
 
 // Open external url links in new buffer
 url_remoting_fn = load_url_in_new_buffer;
+
+// Undefine q for closing tabs, since I use C-x k anyways
+undefine_key(default_global_keymap, "q");

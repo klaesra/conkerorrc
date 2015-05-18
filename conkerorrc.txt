@@ -65,6 +65,16 @@ for (let i = 0; i < 10; ++i) {
     define_switch_buffer_key(String((i+1)%10), i);
 }
 
+function my_zoom_set (buffer) {
+    browser_zoom_set(buffer, true, 125);
+}
+add_hook('create_buffer_late_hook', my_zoom_set);
+
+// If the default zoom levels are not enough for you redefine the zoom_levels variable:
+
+zoom_levels = [ 1, 10, 25, 50, 75, 90, 100, 110,
+                120, 125, 130, 140, 150, 200, 300, 500, 1000, 2000 ];
+
 // Set what program opens pdf in conkeror
 external_content_handlers.set("application/pdf", "evince");
 
@@ -142,7 +152,7 @@ mode_line_add_buttons(standard_mode_line_buttons, true);
 external_content_handlers =
     {
         "*": getenv("EDITOR"),
-        text: { "*": getenv("EDITOR") },
+        text: { "*": "emacsclient" },
         image: { "*": "feh" },
         video: { "*": "mplayer" },
         audio: { "*": "mplayer" },
